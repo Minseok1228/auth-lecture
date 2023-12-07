@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import authAPI from "../../api/auth.api";
+const accessToken = localStorage.getItem('accessToken')
 const initialState = {
-    isLoggedIn: false,
+    isLoggedIn: !!accessToken,
     profile: {
         //null=값이 없다는 값! 정의되지않음 =undefined
         id: undefined,
@@ -13,12 +15,14 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         logIn: (state, action) => {
-            const { id, nickname, avatar } = action.payload
+            const { id, nickname, avatar, accessToken } = action.payload
             state.profile = {
                 id,
                 nickname,
                 avatar
             }
+            authAPI.setToken(accessToken)
+            localStorage.setItem("accessToken", accessToken)
             state.isLoggedIn = true;
         },
         logOut: (state) => {
@@ -28,6 +32,13 @@ const authSlice = createSlice({
                 nickname: undefined,
                 avatar: undefined
             }
+            authAPI.setToken()
+            localStorage.removeItem("accessToken")
+            // localStorage.clear()
+        },
+        setProfile: (state, action) => {
+            const { id, nickname, avatar } = action.payload
+            state.profile = { id, nickname, avatar }
         }
     },
 })

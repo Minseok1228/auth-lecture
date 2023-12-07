@@ -6,6 +6,7 @@ import { authActionCreators } from "../redux/slices/auth.slice";
 
 function Header() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const profile = useSelector((state) => state.auth.profile);
   const dispatch = useDispatch();
   const handleClicLogOut = () => {
     const logoutAction = authActionCreators.logOut();
@@ -16,7 +17,11 @@ function Header() {
       <Logo to="/">인증 연습하기</Logo>
       <Controls>
         {isLoggedIn ? (
-          <button onClick={handleClicLogOut}>로그아웃</button>
+          <>
+            {profile.avatar && <Avatar src={profile.avatar} alt="아바타" />}
+            <small>{profile.nickname}</small>
+            <button onClick={handleClicLogOut}>로그아웃</button>
+          </>
         ) : (
           <>
             <Link to="/log-in">로그인 </Link>
@@ -49,4 +54,9 @@ const Controls = styled.div`
   display: flex;
   align-items: center;
   column-gap: 10px;
+`;
+const Avatar = styled.img`
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
 `;

@@ -8,16 +8,18 @@ function LogInPage() {
   const dispatch = useDispatch();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  //thunk안에서 해야될 로직 메인브랜치와 비교
   const handleClickLogin = async () => {
     if (!id || !password) return alert("ID와 PW을 제대로 써라");
     const response = await authAPI.login({ id, password });
     const data = response.data;
-    const paload = {
+    const payload = {
+      accessToken: data.accessToken,
       id: data.userId,
       nickname: data.nickname,
       avatar: data.avatar,
     };
-    const loginAction = authActionCreators.logIn(paload);
+    const loginAction = authActionCreators.logIn(payload);
     dispatch(loginAction);
   };
   return (
