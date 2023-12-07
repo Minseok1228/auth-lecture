@@ -1,14 +1,28 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { authActionCreators } from "../redux/slices/auth.slice";
 
 function Header() {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+  const handleClicLogOut = () => {
+    const logoutAction = authActionCreators.logOut();
+    dispatch(logoutAction);
+  };
   return (
     <Wrapper>
       <Logo to="/">인증 연습하기</Logo>
       <Controls>
-        <Link to="/log-in">로그인 </Link>
-        <Link to="/sign-up">회원가입 </Link>
+        {isLoggedIn ? (
+          <button onClick={handleClicLogOut}>로그아웃</button>
+        ) : (
+          <>
+            <Link to="/log-in">로그인 </Link>
+            <Link to="/sign-up">회원가입 </Link>
+          </>
+        )}
       </Controls>
     </Wrapper>
   );
